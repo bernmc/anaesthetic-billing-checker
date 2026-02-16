@@ -4,6 +4,12 @@ A local tool for checking Australian MBS anaesthesia item numbers before claimin
 
 **No data leaves your computer.** Everything runs locally in your browser and a small local server.
 
+<p align="center">
+  <img src="docs/screenshot-start.png" alt="Paste your MBS codes" width="600" />
+  <br/>
+  <img src="docs/screenshot-result.png" alt="Audit result with safety checks and fee estimates" width="600" />
+</p>
+
 ---
 
 ## What it does
