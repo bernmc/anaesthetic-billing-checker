@@ -1,0 +1,13 @@
+{
+  "name": "anaesthetic-billing-checker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/web-server.mjs",
+    "update:mbs": "node scripts/update-mbs-data.mjs"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.5.3"
+  }
+}

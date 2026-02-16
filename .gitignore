@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Generated MBS data (rebuilt on first run / update)
+app/mbs-data.js
+
+# macOS
+.DS_Store
+
+# Local-only development docs (not for GitHub)
+.dev/
