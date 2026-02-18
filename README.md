@@ -28,37 +28,45 @@ A local tool for checking Australian MBS anaesthesia item numbers before claimin
 
 ## Getting started
 
-### Step 1: Install Node.js (one-time)
+There are two ways to run the app — pick whichever suits you:
 
-You need **Node.js 18 or newer** installed on your computer. Pick the easiest option for your system:
+### Option A: Standalone binary (no install required)
 
-<details>
-<summary><strong>macOS</strong></summary>
+Download a single pre-built binary — no Node.js, Python, or any runtime needed.
 
-**Easiest — download the installer:**
-1. Go to [https://nodejs.org](https://nodejs.org)
-2. Click the big green **LTS** button to download the `.pkg` installer
-3. Double-click the downloaded file and follow the prompts
-4. Open **Terminal** (search for "Terminal" in Spotlight) and type `node -v` — you should see a version number
+1. Go to the [Releases](../../releases) page
+2. Download the binary for your platform:
 
-**Alternative — Homebrew:**
-```bash
-brew install node
-```
-</details>
+   | Platform | Binary |
+   |---|---|
+   | macOS (Apple Silicon) | `billing-checker-darwin-arm64` |
+   | macOS (Intel) | `billing-checker-darwin-amd64` |
+   | Windows | `billing-checker-windows-amd64.exe` |
+   | Linux | `billing-checker-linux-amd64` |
 
-<details>
-<summary><strong>Windows</strong></summary>
+3. Place the binary in the project folder (alongside the `app/` directory) and rename it to `billing-checker` (or `billing-checker.exe` on Windows)
+4. Double-click **start-billing-app.command** (macOS), **.bat** (Windows), or run `./start-billing-app.sh` (Linux)
 
-1. Go to [https://nodejs.org](https://nodejs.org)
-2. Click the big green **LTS** button to download the `.msi` installer
-3. Run the installer and follow the prompts (keep defaults)
-4. Open **PowerShell** or **Command Prompt** and type `node -v` — you should see a version number
-</details>
+> On first run, macOS may ask you to allow the app. Right-click → Open, then click Open in the dialog.
+
+### Option B: Node.js (for development)
+
+If you have **Node.js 18+** installed (or want to modify the server code):
 
 <details>
-<summary><strong>Linux</strong></summary>
+<summary><strong>Installing Node.js</strong> (one-time, if not already installed)</summary>
 
+**macOS — easiest:**
+1. Go to [https://nodejs.org](https://nodejs.org) and click the green **LTS** button
+2. Double-click the downloaded `.pkg` and follow the prompts
+
+**macOS — Homebrew:** `brew install node`
+
+**Windows:**
+1. Go to [https://nodejs.org](https://nodejs.org) and click the green **LTS** button
+2. Run the `.msi` installer with defaults
+
+**Linux:**
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 source ~/.bashrc
@@ -66,41 +74,23 @@ nvm install --lts
 ```
 </details>
 
-### Step 2: Install dependencies (one-time)
-
-Open a terminal in the project folder and run:
-
+Then:
 ```bash
-npm install
-```
-
-### Step 3: Start the app
-
-**macOS — double-click (easiest):**
-
-Double-click **start-billing-app.command** in Finder. The app opens automatically in your browser.
-To stop: double-click **stop-billing-app.command**.
-
-**Windows — double-click (easiest):**
-
-Double-click **start-billing-app.bat**. The app opens automatically in your browser.
-To stop: double-click **stop-billing-app.bat**.
-
-**Linux — run the script:**
-
-```bash
-./start-billing-app.sh
-```
-
-To stop: `./stop-billing-app.sh` or press `Ctrl+C` in the terminal.
-
-**Any platform — terminal method:**
-
-```bash
+npm install        # first time only
 npm start
 ```
+Open [http://localhost:8080](http://localhost:8080). Press `Ctrl+C` to stop.
 
-Then open [http://localhost:8080](http://localhost:8080) in your browser. Press `Ctrl+C` in the terminal to stop.
+> **Tip:** The start scripts auto-detect which mode to use. If a `billing-checker` binary is present, they use it; otherwise they fall back to Node.js.
+
+### Start & stop
+
+| Action | macOS | Windows | Linux |
+|---|---|---|---|
+| Start | Double-click `start-billing-app.command` | Double-click `start-billing-app.bat` | `./start-billing-app.sh` |
+| Stop | Double-click `stop-billing-app.command` | Double-click `stop-billing-app.bat` | `./stop-billing-app.sh` or `Ctrl+C` |
+
+Use the `PORT` environment variable to change the port: `PORT=9090 ./billing-checker`
 
 ---
 
@@ -109,7 +99,7 @@ Then open [http://localhost:8080](http://localhost:8080) in your browser. Press 
 The app automatically checks for the latest MBS data on first launch. You can also update manually:
 
 - **In the app:** Click the **Update MBS Catalog** button
-- **From terminal:** `npm run update:mbs`
+- **From terminal (Node.js mode):** `npm run update:mbs`
 
 Data comes from the official [MBS Online XML downloads](https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/downloads).
 
@@ -119,24 +109,43 @@ Data comes from the official [MBS Online XML downloads](https://www.mbsonline.go
 
 ```
 ├── app/
-│   ├── index.html          Main page
-│   ├── styles.css           Styling
-│   ├── app.js               All checker logic
-│   └── mbs-data.js          Generated MBS data (auto-created on first run)
-├── scripts/
-│   ├── web-server.mjs       Local server
-│   ├── update-mbs-data.mjs  Fetches official MBS XML
-│   └── acceptance-tests.mjs Automated test suite
-├── start-billing-app.command   macOS one-click start
-├── stop-billing-app.command    macOS one-click stop
-├── start-billing-app.bat        Windows one-click start
-├── stop-billing-app.bat         Windows one-click stop
-├── start-billing-app.sh         Linux start script
-├── stop-billing-app.sh          Linux stop script
-├── package.json
+│   ├── index.html            Main page
+│   ├── styles.css             Styling
+│   ├── app.js                 All checker logic
+│   └── mbs-data.js            Generated MBS data (auto-created on first run)
+├── scripts/                   Node.js server & tools
+│   ├── web-server.mjs         Local HTTP server
+│   ├── update-mbs-data.mjs    Fetches official MBS XML
+│   └── acceptance-tests.mjs   Automated test suite
+├── main.go                    Standalone server + MBS updater (Go)
+├── go.mod                     Go module definition
+├── build.sh                   Cross-compilation script (Go)
+├── package.json               Node.js project config
+├── start-billing-app.*        One-click start scripts
+├── stop-billing-app.*         One-click stop scripts
 ├── LICENSE
 └── README.md
 ```
+
+---
+
+## Building standalone binaries from source
+
+Requires [Go 1.21+](https://go.dev/dl/) (build-time only — end users don't need Go).
+
+**Build for your current platform:**
+
+```bash
+go build -o billing-checker .
+```
+
+**Cross-compile for all platforms:**
+
+```bash
+./build.sh
+```
+
+This produces binaries in `dist/` for macOS (arm64 + amd64), Linux, and Windows.
 
 ---
 

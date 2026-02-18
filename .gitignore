@@ -1,5 +1,10 @@
-# Dependencies
+# Node.js dependencies (installed by npm install for dev mode)
 node_modules/
+
+# Go build outputs
+billing-checker
+billing-checker.exe
+dist/
 
 # Generated MBS data (rebuilt on first run / update)
 app/mbs-data.js
